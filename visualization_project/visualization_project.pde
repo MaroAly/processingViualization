@@ -38,7 +38,25 @@ void draw() {
       text(message, 10, 2*height/3); 
     }
   }
+
+  // Draw color bar
+  int barWidth = 20;
+  int barHeight = height - 50;
+  int barX = width - barWidth - 20;
+  int barY = 25;
+  for (int i = 0; i < barHeight; i++) {
+    float ratio = i / (float)barHeight;
+    int colorValue = (int)map(ratio, 0, 1, 0, 255);
+    stroke(255 - colorValue, 0, colorValue);
+    line(barX, barY + i, barX + barWidth, barY + i);
+  }
+
+  // Draw color bar labels
+  fill(0);
+  text("High", barX, barY - 5);
+  text("Low", barX, barY + barHeight + 15);
 }
+
 
 void mouseClicked() {
   for (Marker marker : markers) {
@@ -48,9 +66,6 @@ void mouseClicked() {
     }
   }
 }
-
-int minSize = 5; // Minimum size of a dot
-int maxSize = 10; // Maximum size of a dot
 
 class Marker {
   float x, y;
@@ -64,15 +79,13 @@ class Marker {
     this.population = population;
   }
 
-  void display() {
-    float colorValue = map(population, minPopulation, maxPopulation, 0, 255);
-    fill(colorValue, 0, 255 - colorValue);
-    float size = map(population, minPopulation, maxPopulation, minSize, maxSize); // Calculate the size of the dot based on population
-    ellipse(x, y, size, size); // Use the calculated size to draw the dot
-  }
+ void display() { // part of the refine
+  float colorValue = map(population, minPopulation, maxPopulation, 0, 255);
+  fill(colorValue, 0, 255 - colorValue);
+  ellipse(x, y, 10, 10);
+}
 
   boolean isInside(float mx, float my) {
-    float size = map(population, minPopulation, maxPopulation, minSize, maxSize); // Calculate the size of the dot based on population
-    return dist(mx, my, x, y) < size/2; // Use the calculated size to check if the mouse is inside the dot
+    return dist(mx, my, x, y) < 5;
   }
 }
